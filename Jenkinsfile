@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSION = '16.x'  // Specificera Node.js-versionen du vill använda
+        NODE_VERSION = '16'  // Specificera Node.js-versionen du vill använda
     }
 
     stages {
@@ -10,10 +10,8 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
-                        // Installera Node.js och npm för backend
-                        nodejs(NODE_VERSION) {
-                            sh 'npm install'
-                        }
+                        // Använd Docker för att köra Node.js
+                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm install'
                     }
                 }
             }
@@ -23,10 +21,8 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
-                        // Kör backend-test
-                        nodejs(NODE_VERSION) {
-                            sh 'npm test || echo "No tests available"'
-                        }
+                        // Kör backend-test med Docker
+                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm test || echo "No tests available"'
                     }
                 }
             }
@@ -36,10 +32,8 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        // Installera Node.js och npm för frontend
-                        nodejs(NODE_VERSION) {
-                            sh 'npm install'
-                        }
+                        // Installera frontend med Docker
+                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm install'
                     }
                 }
             }
@@ -49,10 +43,8 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        // Kör frontend-test
-                        nodejs(NODE_VERSION) {
-                            sh 'npm test || echo "No tests available"'
-                        }
+                        // Testa frontend med Docker
+                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm test || echo "No tests available"'
                     }
                 }
             }
@@ -62,10 +54,8 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        // Bygg frontend
-                        nodejs(NODE_VERSION) {
-                            sh 'npm run build'
-                        }
+                        // Bygg frontend med Docker
+                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm run build'
                     }
                 }
             }
