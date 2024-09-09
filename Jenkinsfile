@@ -1,14 +1,14 @@
 pipeline {
-    agent any
-
-    environment {
-        NODE_VERSION = '16'
+    agent {
+        docker {
+            image 'node:16'  // Använder en Node.js 16 Docker-image
+            args '-u root'   // Kör som root för att undvika rättighetsproblem
+        }
     }
 
     stages {
         stage('Check out repository') {
             steps {
-                // Check out the repository code
                 checkout scm
             }
         }
@@ -16,15 +16,7 @@ pipeline {
         stage('Install backend dependencies') {
             steps {
                 dir('backend') {
-                    // Install Node.js and npm for backend
-                    sh '''
-                    # Install Node.js
-                    curl -sL https://deb.nodesource.com/setup_16.x | bash -
-                    apt-get install -y nodejs
-
-                    # Install backend dependencies
-                    npm install
-                    '''
+                    sh 'npm install'
                 }
             }
         }
@@ -32,7 +24,6 @@ pipeline {
         stage('Run backend tests') {
             steps {
                 dir('backend') {
-                    // Run backend tests
                     sh 'npm test || echo "No tests available in backend"'
                 }
             }
@@ -41,15 +32,7 @@ pipeline {
         stage('Install frontend dependencies') {
             steps {
                 dir('frontend') {
-                    // Install Node.js and npm for frontend
-                    sh '''
-                    # Install Node.js
-                    curl -sL https://deb.nodesource.com/setup_16.x | bash -
-                    apt-get install -y nodejs
-
-                    # Install frontend dependencies
-                    npm install
-                    '''
+                    sh 'npm install'
                 }
             }
         }
@@ -57,7 +40,6 @@ pipeline {
         stage('Build React app') {
             steps {
                 dir('frontend') {
-                    // Build the frontend (React app)
                     sh 'CI=false npm run build'
                 }
             }
