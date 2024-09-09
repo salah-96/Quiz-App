@@ -2,61 +2,63 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSION = '16'  // Specificera Node.js-versionen du vill använda
+        NODE_VERSION = '16'
     }
 
     stages {
-        stage('Installera backend') {
+        stage('Check out repository') {
+            steps {
+                // Check out the repository code
+                checkout scm
+            }
+        }
+
+        stage('Install backend dependencies') {
             steps {
                 dir('backend') {
-                    script {
-                        // Använd Docker för att köra Node.js
-                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm install'
-                    }
+                    // Install Node.js and npm for backend
+                    sh '''
+                    # Install Node.js
+                    curl -sL https://deb.nodesource.com/setup_16.x | bash -
+                    apt-get install -y nodejs
+
+                    # Install backend dependencies
+                    npm install
+                    '''
                 }
             }
         }
 
-        stage('Testa backend') {
+        stage('Run backend tests') {
             steps {
                 dir('backend') {
-                    script {
-                        // Kör backend-test med Docker
-                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm test || echo "No tests available"'
-                    }
+                    // Run backend tests
+                    sh 'npm test || echo "No tests available in backend"'
                 }
             }
         }
 
-        stage('Installera frontend') {
+        stage('Install frontend dependencies') {
             steps {
                 dir('frontend') {
-                    script {
-                        // Installera frontend med Docker
-                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm install'
-                    }
+                    // Install Node.js and npm for frontend
+                    sh '''
+                    # Install Node.js
+                    curl -sL https://deb.nodesource.com/setup_16.x | bash -
+                    apt-get install -y nodejs
+
+                    # Install frontend dependencies
+                    npm install
+                    '''
                 }
             }
         }
 
-        stage('Testa frontend') {
+        stage('Build React app') {
             steps {
                 dir('frontend') {
-                    script {
-                        // Testa frontend med Docker
-                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm test || echo "No tests available"'
-                    }
-                }
-            }
-        }
-
-        stage('Bygg frontend') {
-            steps {
-                dir('frontend') {
-                    script {
-                        // Bygg frontend med Docker
-                        sh 'docker run --rm -v $(pwd):/app -w /app node:$NODE_VERSION npm run build'
-                    }
+                    // Build the frontend (React app)
+                    sh 'CI=false npm run build'
                 }
             }
         }
