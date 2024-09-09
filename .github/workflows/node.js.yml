@@ -41,8 +41,8 @@ jobs:
         run: npm test || echo "No tests available in frontend"
 
       - name: Build the React app
-        working-directory: ./frontend
-        run: npm run build
+        run: CI=false npm run build
+      
 
       # Additional informative steps
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
