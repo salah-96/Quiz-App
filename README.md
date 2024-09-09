@@ -12,14 +12,22 @@ Steg för att starta Quiz Appen.
 
 # cd .\backend\
 
-3. Starta backend:
+3. Installera npm i backend
+
+# npm install
+
+4. Starta backend:
 
 # npm start
 
-4. Öppna en ny terminal och navigera till frontend:
+5. Öppna en ny terminal och navigera till frontend:
 
 # cd .\frontend\
 
-5. Starta frontend i en annan terminal:
+6. Installera npm i frontend
+
+# npm install
+
+7. Starta frontend:
 
 # npm start
