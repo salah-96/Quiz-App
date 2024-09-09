@@ -11,14 +11,23 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install dependencies backend
         run: npm install
+        working-directory: ./backend
+        
+      - name: Install dependencies frontend
+        run: npm install
+        working-directory: ./frontend
 
-      - name: Run tests
+      - name: Run tests & build backend
         run: npm test
+             npm run build
+        working-directory: ./backend
 
-      - name: Build the React app
-        run: npm run build
+      - name: Run tests & build frontend
+        run: npm test
+             npm run build
+        working-directory: ./frontend
 
       # Additional informative steps
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
