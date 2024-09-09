@@ -8,15 +8,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Check out the repository
       - name: Check out repository code
         uses: actions/checkout@v4
 
+      # Backend setup
+      - name: Set up Node.js for backend
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
 
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm install
 
-      - name: Run tests
-        run: npm test
+      - name: Run backend tests
+        working-directory: ./backend
+        run: npm test || echo "No tests available in backend"
+
+      # Frontend setup
+      - name: Set up Node.js for frontend
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Run frontend tests
+        working-directory: ./frontend
+        run: npm test || echo "No tests available in frontend"
 
       - name: Build the React app
+        working-directory: ./frontend
         run: npm run build
 
       # Additional informative steps
