@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'node:16'  // Docker-image med Node.js
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // För Docker-in-Docker
+            image 'node:20'  // Update to Node.js 20
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // For Docker-in-Docker
         }
     }
 
@@ -32,7 +32,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    sh 'CI=false npm run build'  // Använder CI=false för att ignorera varningar
+                    sh 'CI=false npm run build'  // Using CI=false to avoid treating warnings as errors
                 }
             }
         }
