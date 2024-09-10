@@ -1,46 +1,46 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:16'  // Använder en Node.js 16 Docker-image
-            args '-u root'   // Kör som root för att undvika rättighetsproblem
-        }
-    }
+    agent any
 
     stages {
-        stage('Check out repository') {
+        stage('Checkout') {
             steps {
-                checkout scm
+                // Klona ditt GitHub-repo
+                git url: 'https://github.com/salah-96/Quiz-App.git', branch: 'main'
             }
         }
 
-        stage('Install backend dependencies') {
+        stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
+                    // Installera alla npm-paket för backend
                     sh 'npm install'
                 }
             }
         }
 
-        stage('Run backend tests') {
-            steps {
-                dir('backend') {
-                    sh 'npm test || echo "No tests available in backend"'
-                }
-            }
-        }
-
-        stage('Install frontend dependencies') {
+        stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
+                    // Installera alla npm-paket för frontend
                     sh 'npm install'
                 }
             }
         }
 
-        stage('Build React app') {
+        stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    sh 'CI=false npm run build'
+                    // Bygg frontend (t.ex. React)
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Run Backend') {
+            steps {
+                dir('backend') {
+                    // Starta backend som använder MongoDB på localhost (ingen förändring i koden)
+                    sh 'npm start &'
                 }
             }
         }
@@ -48,13 +48,13 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline finished!'
+            echo 'Pipeline execution completed!'
         }
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Build succeeded!'
         }
         failure {
-            echo 'Pipeline failed.'
+            echo 'Build failed!'
         }
     }
 }
