@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:16' // Docker-image med Node.js 16
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Dela Docker-socket om du behöver köra Docker inuti Docker
-        }
-    }
+    agent any
 
     stages {
         stage('Checkout') {
@@ -13,15 +8,35 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Backend Dependencies') {
             steps {
-                sh 'npm install'
+                dir('backend') {
+                    sh 'npm install'
+                }
             }
         }
 
-        stage('Run Application') {
+        stage('Install Frontend Dependencies') {
             steps {
-                sh 'npm start'
+                dir('frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Run Backend') {
+            steps {
+                dir('backend') {
+                    sh 'npm start'
+                }
             }
         }
     }
