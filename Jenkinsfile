@@ -1,8 +1,8 @@
 pipeline {
     agent {
-        docker { 
-            image 'node:16'  // Använd en officiell Node.js Docker-image
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Om du behöver Docker-in-Docker
+        docker {
+            image 'node:16'  // Docker-image med Node.js
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // För Docker-in-Docker
         }
     }
 
@@ -13,48 +13,25 @@ pipeline {
             }
         }
 
-        stage('Install Backend Dependencies') {
+        stage('Install Dependencies') {
             steps {
-                dir('backend') {
-                    sh 'npm install'
-                }
+                sh 'npm install'
             }
         }
 
-        stage('Install Frontend Dependencies') {
+        stage('Run Application') {
             steps {
-                dir('frontend') {
-                    sh 'npm install'
-                }
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                dir('frontend') {
-                    sh 'npm run build'
-                }
-            }
-        }
-
-        stage('Run Backend') {
-            steps {
-                dir('backend') {
-                    sh 'npm start &'
-                }
+                sh 'npm start'
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline execution completed!'
-        }
         success {
-            echo 'Build succeeded!'
+            echo 'Pipeline succeeded!'
         }
         failure {
-            echo 'Build failed!'
+            echo 'Pipeline failed!'
         }
     }
 }
