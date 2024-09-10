@@ -9,6 +9,9 @@ pipeline {
         }
 
         stage('Install Backend Dependencies') {
+            agent {
+                docker { image 'node:16' }
+            }
             steps {
                 dir('backend') {
                     sh 'npm install'
@@ -17,6 +20,9 @@ pipeline {
         }
 
         stage('Install Frontend Dependencies') {
+            agent {
+                docker { image 'node:16' }
+            }
             steps {
                 dir('frontend') {
                     sh 'npm install'
@@ -25,6 +31,9 @@ pipeline {
         }
 
         stage('Build Frontend') {
+            agent {
+                docker { image 'node:16' }
+            }
             steps {
                 dir('frontend') {
                     sh 'npm run build'
@@ -33,6 +42,9 @@ pipeline {
         }
 
         stage('Run Backend') {
+            agent {
+                docker { image 'node:16' }
+            }
             steps {
                 dir('backend') {
                     sh 'npm start'
