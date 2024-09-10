@@ -71,7 +71,7 @@ const Result = ({
   // Use effect to submit the result once the component is rendered
   useEffect(() => {
     submitResult(); // Kör endast en gång när komponenten laddas
-  }, [submitResult]); // Lägg till submitResult som beroende
+  }, []);
   
   return (
     <Container>
