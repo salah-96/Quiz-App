@@ -1,10 +1,14 @@
 pipeline {
-    agent any
+    agent {
+        docker { 
+            image 'node:16'  // Använd en officiell Node.js Docker-image
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Om du behöver Docker-in-Docker
+        }
+    }
 
     stages {
         stage('Checkout') {
             steps {
-                // Klona ditt GitHub-repo
                 git url: 'https://github.com/salah-96/Quiz-App.git', branch: 'main'
             }
         }
@@ -12,7 +16,6 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    // Installera alla npm-paket för backend
                     sh 'npm install'
                 }
             }
@@ -21,7 +24,6 @@ pipeline {
         stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
-                    // Installera alla npm-paket för frontend
                     sh 'npm install'
                 }
             }
@@ -30,7 +32,6 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    // Bygg frontend (t.ex. React)
                     sh 'npm run build'
                 }
             }
@@ -39,7 +40,6 @@ pipeline {
         stage('Run Backend') {
             steps {
                 dir('backend') {
-                    // Starta backend som använder MongoDB på localhost (ingen förändring i koden)
                     sh 'npm start &'
                 }
             }
