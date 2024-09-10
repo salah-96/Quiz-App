@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'node:16'  // Docker-image med Node.js
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // För Docker-in-Docker
+            image 'node:16' // Använder Node.js 16 som Docker-image
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Dela Docker-socket för att köra Docker inuti Docker
         }
     }
 
@@ -16,6 +16,12 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
+            }
+        }
+
+        stage('Run Tests') { // Valfritt om du har några tester
+            steps {
+                sh 'npm test'
             }
         }
 
