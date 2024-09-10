@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'node:16' // Docker-image med Node.js 16
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Dela Docker-socket om du behöver köra Docker inuti Docker
+            image 'node:16'  // Docker-image med Node.js
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // För Docker-in-Docker
         }
     }
 
@@ -13,15 +13,27 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Backend Dependencies') {
             steps {
-                sh 'npm install'
+                dir('backend') {
+                    sh 'npm install'
+                }
             }
         }
 
-        stage('Run Application') {
+        stage('Install Frontend Dependencies') {
             steps {
-                sh 'npm start'
+                dir('frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'CI=false npm run build'  // Använder CI=false för att ignorera varningar
+                }
             }
         }
     }
