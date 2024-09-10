@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:16' // Docker-image med Node.js 16
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Dela Docker-socket om du behöver köra Docker inuti Docker
+        }
+    }
 
     stages {
         stage('Checkout') {
