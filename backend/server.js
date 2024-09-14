@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/quizApp');
+mongoose.connect('mongodb://mongo:27017/quizdb');
 
 // Define the result schema
 const resultSchema = new mongoose.Schema({
