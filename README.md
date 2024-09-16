@@ -1,3 +1,8 @@
+Nödvändiga appar
+
+Docker Desktop
+
+
 Steg för att starta Quiz Appen.
 
 1. Skapa en databas som mongodb i docker:
