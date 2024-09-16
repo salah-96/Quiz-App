@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'node_exporter' # Detta är en exporter som kan övervaka servern
+    static_configs:
+      - targets: ['localhost:9100']
+
+  - job_name: 'quiz_app'
+    static_configs:
+      - targets: ['host.docker.internal:5000']  # Din backend för quiz-appen
