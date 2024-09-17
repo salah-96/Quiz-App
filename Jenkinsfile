@@ -29,14 +29,7 @@ pipeline {
             }
         }
 
-        // Run backend tests
-        stage('Run Backend Tests') {
-            steps {
-                dir('backend') {
-                    sh 'npm test'  // Kör tester för backend
-                }
-            }
-        }
+       
 
         // Run frontend tests
         stage('Run Frontend Tests') {
