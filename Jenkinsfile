@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:20'  // Update to Node.js 20
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // For Docker-in-Docker
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // For Docker-in-Docker 
         }
     }
 
