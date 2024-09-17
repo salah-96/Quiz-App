@@ -1,20 +1,18 @@
 pipeline {
     agent {
         docker {
-            image 'node:20'  // Node.js 20-bild
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Docker-in-Docker
+            image 'node:20'  // Update to Node.js 20
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // For Docker-in-Docker
         }
     }
 
     stages {
-        // Checkout from GitHub repository
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/salah-96/Quiz-App.git', branch: 'main'
             }
         }
 
-        // Install backend dependencies
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
@@ -23,7 +21,6 @@ pipeline {
             }
         }
 
-        // Install frontend dependencies
         stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
@@ -68,15 +65,14 @@ pipeline {
             }
         }
 
-        // Build frontend
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    sh 'CI=false npm run build'  // Bygger frontend och ignorerar CI-varningar
+                    sh 'CI=false npm run build'  // Using CI=false to avoid treating warnings as errors
                 }
             }
         }
-
+    }
 
     post {
         success {
