@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"  # Changed from 3000:3000 to 80:80 for Nginx
+    environment:
+      - REACT_APP_API_URL=http://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - quiz-net
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/quizdb
+    depends_on:
+      - mongo
+    networks:
+      - quiz-net
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo-container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - quiz-net
+
+volumes:
+  mongo-data:
+
+networks:
+  quiz-net:
+    driver: bridge

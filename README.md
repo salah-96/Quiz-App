@@ -1,3 +1,8 @@
+Nödvändiga appar
+
+Docker Desktop
+
+
 Steg för att starta Quiz Appen.
 
 1. Skapa en databas som mongodb i docker:
@@ -8,7 +13,7 @@ Steg för att starta Quiz Appen.
 
 # docker start mongo-container
 
-2. Navigera till backend mappen:
+2. Navigera till backend mappen:cd
 
 # cd .\backend\
 
