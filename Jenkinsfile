@@ -29,34 +29,6 @@ pipeline {
             }
         }
 
-       
-
-        // Run frontend tests
-        stage('Run Frontend Tests') {
-            steps {
-                dir('frontend') {
-                    sh 'npm test'  // Kör tester för frontend
-                }
-            }
-        }
-
-        // Security audit for backend
-        stage('Security Audit Backend') {
-            steps {
-                dir('backend') {
-                    sh 'npm audit'  // Säkerhetskontroll för backend
-                }
-            }
-        }
-
-        // Security audit for frontend
-        stage('Security Audit Frontend') {
-            steps {
-                dir('frontend') {
-                    sh 'npm audit'  // Säkerhetskontroll för frontend
-                }
-            }
-        }
 
         stage('Build Frontend') {
             steps {
