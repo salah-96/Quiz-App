@@ -1,18 +1,20 @@
 pipeline {
     agent {
         docker {
-            image 'node:20'  // Update to Node.js 20
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // For Docker-in-Docker
+            image 'node:20'  // Node.js 20-bild
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Docker-in-Docker
         }
     }
 
     stages {
+        // Checkout from GitHub repository
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/salah-96/Quiz-App.git', branch: 'main'
             }
         }
 
+        // Install backend dependencies
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
@@ -21,6 +23,7 @@ pipeline {
             }
         }
 
+        // Install frontend dependencies
         stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
@@ -29,14 +32,51 @@ pipeline {
             }
         }
 
-        stage('Build Frontend') {
+        // Run backend tests
+        stage('Run Backend Tests') {
             steps {
-                dir('frontend') {
-                    sh 'CI=false npm run build'  // Using CI=false to avoid treating warnings as errors
+                dir('backend') {
+                    sh 'npm test'  // Kör tester för backend
                 }
             }
         }
-    }
+
+        // Run frontend tests
+        stage('Run Frontend Tests') {
+            steps {
+                dir('frontend') {
+                    sh 'npm test'  // Kör tester för frontend
+                }
+            }
+        }
+
+        // Security audit for backend
+        stage('Security Audit Backend') {
+            steps {
+                dir('backend') {
+                    sh 'npm audit'  // Säkerhetskontroll för backend
+                }
+            }
+        }
+
+        // Security audit for frontend
+        stage('Security Audit Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'npm audit'  // Säkerhetskontroll för frontend
+                }
+            }
+        }
+
+        // Build frontend
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'CI=false npm run build'  // Bygger frontend och ignorerar CI-varningar
+                }
+            }
+        }
+
 
     post {
         success {
