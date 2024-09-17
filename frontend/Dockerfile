@@ -1,10 +1,10 @@
 # Use the official Node.js image as the base image
-FROM node:16 as build
+FROM node:16 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package.json and package-lock.json and install dependencies
 COPY package*.json ./
 RUN npm install
 
@@ -14,20 +14,14 @@ COPY . .
 # Build the app for production
 RUN npm run build
 
-# Use Node.js to serve the build
-FROM node:16
+# Use the Nginx image to serve the app
+FROM nginx:alpine
 
-# Set the working directory inside the container
-WORKDIR /app
+# Copy the build output to Nginx's HTML directory
+COPY --from=build /app/build /usr/share/nginx/html
 
-# Copy build files from the previous stage
-COPY --from=build /app/build /app/build
+# Expose port 80 for the web server
+EXPOSE 80
 
-# Install serve to serve the build
-RUN npm install -g serve
-
-# Serve the build
-CMD ["serve", "-s", "build"]
-
-# Expose the port that the app will run on
-EXPOSE 3000
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
